@@ -45,4 +45,49 @@ function mostrarPrestamos() {
             </li>
         `).join("");
 }
+function devolverLibro(titulo) {
+    const indexPrestamo = prestamos.findIndex(prestamo => prestamo.titulo === titulo);
+    if (indexPrestamo === -1) return;
+
+    const libroIndex = libros.findIndex(libro => libro.titulo === titulo);
+    libros[libroIndex].disponible = true;
+    prestamos.splice(indexPrestamo, 1);
+
+    notificar(`Has devuelto: ${titulo}. Gracias por devolverlo a tiempo.`);
+    mostrarLibros();
+    mostrarPrestamos();
+}
+
+document.getElementById("buscar").addEventListener("input", (e) => {
+    const criterio = e.target.value.toLowerCase();
+    const resultados = libros.filter(libro =>
+        libro.titulo.toLowerCase().includes(criterio) ||
+        libro.autor.toLowerCase().includes(criterio) ||
+        libro.genero.toLowerCase().includes(criterio)
+    );
+    const listaResultados = document.getElementById("resultados");
+    listaResultados.innerHTML = resultados
+        .map(libro => `<li>${libro.titulo} - ${libro.autor} (${libro.genero})</li>`)
+        .join("");
+});
+
+function notificar(mensaje) {
+    notificaciones.push(mensaje);
+    const listaNotificaciones = document.getElementById("notificaciones");
+    listaNotificaciones.innerHTML = notificaciones
+        .map(notificacion => `<li>${notificacion}</li>`)
+        .join("");
+    alert(mensaje);
+}
+
+// Recordatorios automáticos
+setInterval(() => {
+    const hoy = new Date();
+    prestamos.forEach(prestamo => {
+        if (prestamo.fechaDevolucion.toDateString() === hoy.toDateString()) {
+            notificar(`Devolver libro: ${prestamo.titulo}, hoy`);
+        }
+    });
+}, 60000);
+
 mostrarLibros();
