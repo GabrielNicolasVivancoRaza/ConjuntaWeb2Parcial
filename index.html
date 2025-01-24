@@ -12,21 +12,41 @@
 
     <h2>Préstamos</h2>
     <ul id="prestamos"></ul>
+    <ul id= "Fecha_devolucion"></ul>
 
     <h2>Buscar Libros</h2>
     <input type="text" id="buscar" placeholder="Buscar por titulo, autor o genero">
     <ul id="resultados"></ul>
 
-    <script>
+
+    <script> 
         let inventarioLibros = [
-            {titulo: "El principtio", autor: "Antoine de Saint-Exupéry", genero: "Fabula", disponible: true},
+            {titulo: "El principito", autor: "Antoine de Saint-Exupéry", genero: "Fábula", disponible: true},
             {titulo: "La Biblia", autor: "Dios", genero: "Libro Sagrado", disponible: true},
-            {titulo: "Comics", autor: "Stan Lee", genero: "Ficcion", disponible: true},
+            {titulo: "Comics", autor: "Stan Lee", genero: "Ficción", disponible: true},
             {titulo: "It", autor: "Stephen King", genero: "Terror", disponible: true}
         ];
 
-        
+        let prestamos = [];
+
+        function mostrarLibros() {
+            const listaLibros = document.getElementById("libros");
+            listaLibros.innerHTML = ""; 
+            
+            inventarioLibros.forEach((libro, index) => {
+                const item = document.createElement("li");
+                item.textContent = `${libro.titulo} - ${libro.autor} (${libro.genero}) - ${libro.disponible ? "Disponible" : "No disponible"}`;
+                if (libro.disponible) {
+                    const boton = document.createElement("button");
+                    boton.textContent = "Reservar";
+                    boton.onclick = () => reservarLibro(index);
+                    item.appendChild(boton);
+                }
+                listaLibros.appendChild(item);
+            });
+        }
+        mostrarLibros();
     </script>
-    
+
 </body>
 </html>
